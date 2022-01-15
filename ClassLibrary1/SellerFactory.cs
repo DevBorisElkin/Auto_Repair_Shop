@@ -25,6 +25,7 @@ namespace ClassLibrary1
 
             ClientReleased += GiveThreadASeller;
         }
+        ~SellerFactory() { ClientReleased -= GiveThreadASeller; }
 
         void GiveThreadASeller(Seller a)
         {

@@ -11,10 +11,11 @@ namespace Auto_Repair_Shop
 {
     public class TaskImplementation
     {
-        int amountOfClients = 1000;
+        int amountOfClients = 100;
         int maxThreads = 20;
 
-        int sellerWorkDuration = 15; //100
+        int sellerWorkDuration = 10; //100
+        int clientMovementTimeToPickupPoint = 15; //100
 
         SellerFactory sellerFactory;
 
@@ -22,10 +23,11 @@ namespace Auto_Repair_Shop
         {
             Console.WriteLine($"chosen scenario: {chosenScenario}");
             Console.WriteLine($"Processors count: {Environment.ProcessorCount}");
+            Console.WriteLine("Press any key to start");
+            Console.ReadKey();
 
             sellerFactory = new SellerFactory(4, sellerWorkDuration);
 
-            Thread.Sleep(1000);
             
             ThreadPool.SetMaxThreads(maxThreads, maxThreads);
 
@@ -36,7 +38,7 @@ namespace Auto_Repair_Shop
                 ThreadPool.QueueUserWorkItem(
                     new WaitCallback(x =>
                     {
-                        ManageClient_RequestStage(x);
+                        ManageClient(x);
                     }), client
                 );
             }
@@ -44,15 +46,26 @@ namespace Auto_Repair_Shop
             Console.ReadLine();
         }
 
-        void ManageClient_RequestStage(object obj)
+        void ManageClient(object obj)
         {
-            Client c = (Client) obj;
+            Client c = (Client)obj;
+            ManageClient_RequestStage(c);
+            ManageClient_GoToPickupPoint(c);
+        }
 
+        void ManageClient_RequestStage(Client c)
+        {
             Seller seller = sellerFactory.GetSeller();
             Thread.Sleep(sellerWorkDuration);
             Console.WriteLine($"client {c.clientId} finished work, thread id:{Thread.CurrentThread.ManagedThreadId}, with seller [{seller.sellerId}]");
             seller.ReleaseTheSeller();
 
+        }
+
+        void ManageClient_GoToPickupPoint(Client c)
+        {
+            Thread.Sleep(clientMovementTimeToPickupPoint);
+            Console.WriteLine($"client {c.clientId} moved to pickup point, thread id:{Thread.CurrentThread.ManagedThreadId}");
         }
 
     }
