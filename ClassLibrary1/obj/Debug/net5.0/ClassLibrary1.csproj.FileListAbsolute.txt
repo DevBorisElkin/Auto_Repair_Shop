@@ -1,0 +1,12 @@
+C:\BORIS\Storage1\BORIS' FOLDER\programming\C#\Auto_Repair_Shop\ClassLibrary1\bin\Debug\net5.0\ClassLibrary1.deps.json
+C:\BORIS\Storage1\BORIS' FOLDER\programming\C#\Auto_Repair_Shop\ClassLibrary1\bin\Debug\net5.0\ClassLibrary1.dll
+C:\BORIS\Storage1\BORIS' FOLDER\programming\C#\Auto_Repair_Shop\ClassLibrary1\bin\Debug\net5.0\ref\ClassLibrary1.dll
+C:\BORIS\Storage1\BORIS' FOLDER\programming\C#\Auto_Repair_Shop\ClassLibrary1\bin\Debug\net5.0\ClassLibrary1.pdb
+C:\BORIS\Storage1\BORIS' FOLDER\programming\C#\Auto_Repair_Shop\ClassLibrary1\obj\Debug\net5.0\ClassLibrary1.GeneratedMSBuildEditorConfig.editorconfig
+C:\BORIS\Storage1\BORIS' FOLDER\programming\C#\Auto_Repair_Shop\ClassLibrary1\obj\Debug\net5.0\ClassLibrary1.AssemblyInfoInputs.cache
+C:\BORIS\Storage1\BORIS' FOLDER\programming\C#\Auto_Repair_Shop\ClassLibrary1\obj\Debug\net5.0\ClassLibrary1.AssemblyInfo.cs
+C:\BORIS\Storage1\BORIS' FOLDER\programming\C#\Auto_Repair_Shop\ClassLibrary1\obj\Debug\net5.0\ClassLibrary1.csproj.CoreCompileInputs.cache
+C:\BORIS\Storage1\BORIS' FOLDER\programming\C#\Auto_Repair_Shop\ClassLibrary1\obj\Debug\net5.0\ClassLibrary1.dll
+C:\BORIS\Storage1\BORIS' FOLDER\programming\C#\Auto_Repair_Shop\ClassLibrary1\obj\Debug\net5.0\ref\ClassLibrary1.dll
+C:\BORIS\Storage1\BORIS' FOLDER\programming\C#\Auto_Repair_Shop\ClassLibrary1\obj\Debug\net5.0\ClassLibrary1.pdb
+C:\BORIS\Storage1\BORIS' FOLDER\programming\C#\Auto_Repair_Shop\ClassLibrary1\obj\Debug\net5.0\ClassLibrary1.csproj.AssemblyReference.cache
