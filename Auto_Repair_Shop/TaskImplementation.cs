@@ -11,10 +11,10 @@ namespace Auto_Repair_Shop
 {
     public class TaskImplementation
     {
-        int amountOfClients = 100;
+        int amountOfClients = 1000;
         int maxThreads = 20;
 
-        int sellerWorkDuration = 1; //100
+        int sellerWorkDuration = 15; //100
 
         SellerFactory sellerFactory;
 
@@ -23,9 +23,9 @@ namespace Auto_Repair_Shop
             Console.WriteLine($"chosen scenario: {chosenScenario}");
             Console.WriteLine($"Processors count: {Environment.ProcessorCount}");
 
-            sellerFactory = new SellerFactory(4);
+            sellerFactory = new SellerFactory(4, sellerWorkDuration);
 
-            Thread.Sleep(3000);
+            Thread.Sleep(1000);
             
             ThreadPool.SetMaxThreads(maxThreads, maxThreads);
 
@@ -50,9 +50,9 @@ namespace Auto_Repair_Shop
 
             Seller seller = sellerFactory.GetSeller();
             Thread.Sleep(sellerWorkDuration);
+            Console.WriteLine($"client {c.clientId} finished work, thread id:{Thread.CurrentThread.ManagedThreadId}, with seller [{seller.sellerId}]");
             seller.ReleaseTheSeller();
 
-            Console.WriteLine($"client {c.clientId} finished work, thread id:{Thread.CurrentThread.ManagedThreadId}");
         }
 
     }
