@@ -14,7 +14,7 @@ namespace Auto_Repair_Shop
         int amountOfClients = 100;
         int maxThreads = 20;
 
-        int sellerWorkDuration = 100;
+        int sellerWorkDuration = 500;
 
         SellerFactory sellerFactory;
 

@@ -15,7 +15,7 @@ namespace ClassLibrary1
             sellerFactory = factory;
         }
 
-        public int _lockFlag = 0; // 0 - free
+        public int _lockFlag = 0;
 
         public void ReleaseTheSeller()
         {
