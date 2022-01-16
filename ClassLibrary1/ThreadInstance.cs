@@ -20,16 +20,17 @@ namespace ClassLibrary1
         object obj;
         Action _threadOnCompleted;
 
-        public ThreadInstance(ThreadFactory threadFactory)
+        public ThreadInstance(ThreadFactory threadFactory, int id)
         {
             this.threadFactory = threadFactory;
+            this.entityId = id;
         }
 
         public void ReleaseTheThread()
         {
-            Console.WriteLine($"Thread[{Thread.CurrentThread.ManagedThreadId}] is trying to unlock thread thread [{entityId}]");
+            //Console.WriteLine($"Thread[{Thread.CurrentThread.ManagedThreadId}] is trying to unlock thread thread [{entityId}]");
             Interlocked.Decrement(ref _lockFlag);
-            Monitor.Exit(this);
+            //Monitor.Exit(this);
             threadFactory.ThreadReleased?.Invoke(this);
         }
 

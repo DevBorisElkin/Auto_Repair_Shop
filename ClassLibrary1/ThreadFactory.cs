@@ -28,7 +28,7 @@ namespace ClassLibrary1
             threads = new List<ThreadInstance>();
 
             for (int i = 1; i <= this.amountOfThreads; i++)
-                threads.Add(new ThreadInstance(this));
+                threads.Add(new ThreadInstance(this, i));
 
             autoResetEvent = new AutoResetEvent(true);
         }
@@ -55,7 +55,7 @@ namespace ClassLibrary1
                 if (Interlocked.CompareExchange(ref a._lockFlag, 1, 0) == 0)
                 {
                     Console.WriteLine($"Thread[{Thread.CurrentThread.ManagedThreadId}] is locking thread [{a.entityId}]");
-                    Monitor.Enter(a);
+                    //Monitor.Enter(a);
                     threadInstance = a;
                     return true;
                 }
@@ -73,7 +73,7 @@ namespace ClassLibrary1
                 {
                     if (Interlocked.CompareExchange(ref a._lockFlag, 1, 0) == 0)
                     {
-                        Monitor.Enter(a);
+                        //Monitor.Enter(a);
                         threadInstance = a;
 
                         Console.WriteLine($"Finished Persistent ThreadInstance aquasition on iteration [{iteration}], received thread [{threadInstance.assignedThread.ManagedThreadId}]");
