@@ -35,15 +35,15 @@ namespace ClassLibrary1
             autoResetEvent.Set();
         }
         AutoResetEvent autoResetEvent;
-        public Entity<T> GetEntity()
+        public T GetEntity()
         {
-            bool foundFreeEntity = TryGetVacantEntity(out Entity<T> entity);
-            if (foundFreeEntity) return entity;
+            bool foundFreeEntity = TryGetVacantEntity(out T entity);
+            if (foundFreeEntity) return (T) entity;
 
             autoResetEvent.WaitOne();
 
             foundFreeEntity = TryGetVacantEntityPersistent(out entity);
-            if (foundFreeEntity) return entity;
+            if (foundFreeEntity) return (T) entity;
             else Console.WriteLine("Error, couldn't find free seller althought there's should be at least one");
 
             // just error handling
@@ -58,7 +58,7 @@ namespace ClassLibrary1
             return null;
         }
 
-        private bool TryGetVacantEntity(out Entity<T> entity)
+        private bool TryGetVacantEntity(out T entity)
         {
             entity = null;
             foreach (var a in entities)
@@ -73,7 +73,12 @@ namespace ClassLibrary1
             return false;
         }
 
-        bool TryGetVacantEntityPersistent(out Entity<T> entity)
+        //public T1 GetEntity<T1>()
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        bool TryGetVacantEntityPersistent(out T  entity)
         {
             entity = null;
             int iteration = 1;

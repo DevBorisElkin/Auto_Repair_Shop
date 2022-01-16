@@ -60,7 +60,7 @@ namespace Auto_Repair_Shop
 
         void ManageClient_RequestStage(Client c)
         {
-            Seller seller = (Seller) sellerFactory.GetEntity();
+            Seller seller = sellerFactory.GetEntity();
             Thread.Sleep(sellerWorkDuration); // immitation of DoWork();
             Console.WriteLine($"client {c.clientId} finished work, thread id:{Thread.CurrentThread.ManagedThreadId}, with seller [{seller.entityId}]");
             seller.ReleaseTheEntity();
