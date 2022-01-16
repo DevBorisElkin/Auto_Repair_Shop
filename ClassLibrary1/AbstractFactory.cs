@@ -14,6 +14,7 @@ namespace ClassLibrary1
         public Action<T> EntityReleased;
 
         private int entityProcessDelay;
+        static private int iterationsLimit = 20000;
 
         protected T GetObject<T>() where T : new()
         {
@@ -38,22 +39,13 @@ namespace ClassLibrary1
         public T GetEntity()
         {
             bool foundFreeEntity = TryGetVacantEntity(out T entity);
-            if (foundFreeEntity) return (T) entity;
+            if (foundFreeEntity) return entity;
 
             autoResetEvent.WaitOne();
 
             foundFreeEntity = TryGetVacantEntityPersistent(out entity);
-            if (foundFreeEntity) return (T) entity;
+            if (foundFreeEntity) return entity;
             else Console.WriteLine("Error, couldn't find free seller althought there's should be at least one");
-
-            // just error handling
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("____");
-            sb.AppendLine($"Found no sellers, thread id[{Thread.CurrentThread.ManagedThreadId}]");
-            foreach (var a in entities)
-                sb.AppendLine($"seller lock flag: [{a._lockFlag}]");
-            sb.AppendLine("____");
-            Console.WriteLine(sb);
 
             return null;
         }
@@ -73,16 +65,11 @@ namespace ClassLibrary1
             return false;
         }
 
-        //public T1 GetEntity<T1>()
-        //{
-        //    throw new NotImplementedException();
-        //}
-
         bool TryGetVacantEntityPersistent(out T  entity)
         {
             entity = null;
             int iteration = 1;
-            while (entity == null)
+            while (entity == null && iteration < iterationsLimit)
             {
                 foreach (var a in entities)
                 {

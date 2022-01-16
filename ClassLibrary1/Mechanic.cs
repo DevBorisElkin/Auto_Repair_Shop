@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace ClassLibrary1
 {
-    class MechanicFactory
+    public class Mechanic : Entity<Mechanic>
     {
+        public Mechanic(AbstractFactory<Mechanic> factory, int entityId) : base(factory, entityId) { }
     }
 }

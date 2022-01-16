@@ -14,12 +14,15 @@ namespace Auto_Repair_Shop
         int amountOfClients = 100;
         int maxThreads = 20;
 
-        int sellerWorkDuration = 10; //100
+        int sellerWorkDuration = 500; //100
         int clientMovementTimeToPickupPoint = 15; //100
+        int mechanicWorkDuration = 1000; //100
 
         int sellersCount = 4;
+        int mechanicsCount = 5;
 
-        AbstractFactory<Seller> sellerFactory;
+        AbstractFactory<Seller> sellersFactory;
+        AbstractFactory<Mechanic> mechanicsFactory;
 
         public TaskImplementation()
         {
@@ -29,9 +32,14 @@ namespace Auto_Repair_Shop
             Console.ReadKey();
 
             List<Seller> sellers = new List<Seller>();
-            sellerFactory = new AbstractFactory<Seller>(sellers, sellerWorkDuration);
+            sellersFactory = new AbstractFactory<Seller>(sellers, sellerWorkDuration);
             for (int i = 1; i <= sellersCount; i++)
-                sellers.Add(new Seller(sellerFactory, i));
+                sellers.Add(new Seller(sellersFactory, i));
+
+            List<Mechanic> mechanics = new List<Mechanic>();
+            mechanicsFactory = new AbstractFactory<Mechanic>(mechanics, mechanicWorkDuration);
+            for (int i = 0; i < mechanicsCount; i++)
+                mechanics.Add(new Mechanic(mechanicsFactory, i));
 
             
             ThreadPool.SetMaxThreads(maxThreads, maxThreads);
@@ -60,7 +68,7 @@ namespace Auto_Repair_Shop
 
         void ManageClient_RequestStage(Client c)
         {
-            Seller seller = sellerFactory.GetEntity();
+            Seller seller = sellersFactory.GetEntity();
             Thread.Sleep(sellerWorkDuration); // immitation of DoWork();
             Console.WriteLine($"client {c.clientId} finished work, thread id:{Thread.CurrentThread.ManagedThreadId}, with seller [{seller.entityId}]");
             seller.ReleaseTheEntity();
@@ -77,6 +85,22 @@ namespace Auto_Repair_Shop
         {
             // here we start a new thread and searching for mechanic for that specific car
             // then he does the work and sends the car to the pickup point
+
+            ThreadPool.QueueUserWorkItem(
+                    new WaitCallback(x =>
+                    {
+                        FixClientsCar(x);
+                    }), c
+                );
+        }
+
+        void FixClientsCar(object client)
+        {
+            Client c = (Client)client;
+            Mechanic mechanic = mechanicsFactory.GetEntity();
+            Thread.Sleep(mechanicWorkDuration);
+            Console.WriteLine($"mechanic {mechanic.entityId} finished work for client[{c.clientId}], thread id:{Thread.CurrentThread.ManagedThreadId}");
+            mechanic.ReleaseTheEntity();
         }
 
     }
