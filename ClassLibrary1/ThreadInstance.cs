@@ -45,6 +45,7 @@ namespace ClassLibrary1
         public void LaunchThread()
         {
             assignedThread = new Thread(ThreadStart);
+            //if (assignedThread == null) assignedThread = new Thread(ThreadStart);
             assignedThread.Start();
         }
 

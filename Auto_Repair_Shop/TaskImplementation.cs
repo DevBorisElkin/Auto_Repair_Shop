@@ -11,12 +11,12 @@ namespace Auto_Repair_Shop
 {
     public class TaskImplementation
     {
-        int amountOfClients = 100;
+        int amountOfClients = 20;
         int maxThreads = 20;
 
-        int sellerWorkDuration = 1; //100
-        int clientMovementTimeToPickupPoint = 1; //100
-        int mechanicWorkDuration = 1; //100
+        int sellerWorkDuration = 100; //100
+        int clientMovementTimeToPickupPoint = 100; //100
+        int mechanicWorkDuration = 100; //100
 
         int sellersCount = 4;
         int mechanicsCount = 5;
