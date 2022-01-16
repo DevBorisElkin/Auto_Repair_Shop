@@ -28,6 +28,7 @@ namespace Auto_Repair_Shop
 
         public TaskImplementation()
         {
+            // comment out these 3 lines to insert your custom values above
             sellerWorkDuration = chosenScenario.delayOrder;
             clientMovementTimeToPickupPoint = chosenScenario.delayClient;
             mechanicWorkDuration = chosenScenario.delayProduction;
@@ -39,13 +40,11 @@ namespace Auto_Repair_Shop
 
             List<Seller> sellers = new List<Seller>();
             sellersFactory = new AbstractFactory<Seller>(sellers, sellerWorkDuration);
-            for (int i = 1; i <= sellersCount; i++)
-                sellers.Add(new Seller(sellersFactory, i));
+            for (int i = 1; i <= sellersCount; i++) sellers.Add(new Seller(sellersFactory, i));
 
             List<Mechanic> mechanics = new List<Mechanic>();
             mechanicsFactory = new AbstractFactory<Mechanic>(mechanics, mechanicWorkDuration);
-            for (int i = 0; i < mechanicsCount; i++)
-                mechanics.Add(new Mechanic(mechanicsFactory, i));
+            for (int i = 0; i < mechanicsCount; i++) mechanics.Add(new Mechanic(mechanicsFactory, i));
 
             threadFactory = new ThreadFactory(5, 1);
             carPickupPoint = new CarPickupPoint();
@@ -64,7 +63,8 @@ namespace Auto_Repair_Shop
                 );
             }
 
-            Console.ReadLine();
+            //while(true) // if you need it to not stop after pressing enter again
+                Console.ReadLine();
         }
 
         void ManageClient(object obj)
@@ -81,6 +81,29 @@ namespace Auto_Repair_Shop
             Console.WriteLine($"client {c.clientId} finished work, thread id:{Thread.CurrentThread.ManagedThreadId}, with seller [{seller.entityId}]");
             seller.ReleaseTheEntity();
             SendClientRequestToTheWorkshop(c);
+
+            // running out of time, this produces too much garbage, as well as Thread factory, which starts new threads
+            void SendClientRequestToTheWorkshop(Client c)
+            {
+                Thread thread = new Thread(() =>
+                {
+                    var threadInstance = threadFactory.GetFreeThread();
+                    threadInstance.SetWork(FixClientsCar, c, threadInstance.ReleaseTheThread);
+                    threadInstance.LaunchThread();
+                });
+                thread.Start();
+            }
+
+            void FixClientsCar(object client)
+            {
+                Client c = (Client)client;
+                Mechanic mechanic = mechanicsFactory.GetEntity();
+                Console.WriteLine($"mechanic {mechanic.entityId} STARTED work for client[{c.clientId}], thread id:{Thread.CurrentThread.ManagedThreadId}");
+                Thread.Sleep(mechanicWorkDuration);
+                Console.WriteLine($"mechanic {mechanic.entityId} finished work for client[{c.clientId}], thread id:{Thread.CurrentThread.ManagedThreadId}");
+                carPickupPoint.AddCarToPickupPoint(c.clientId);
+                mechanic.ReleaseTheEntity();
+            }
         }
 
         void ManageClient_GoToPickupPoint(Client c)
@@ -96,29 +119,6 @@ namespace Auto_Repair_Shop
         void PickTheCarAfterItsArriaval(int id)
         {
             Console.WriteLine($"client {id} FINALLY RECEIVED THE CAR, BUT CAR ARRIVED A BIT LATER, thread id:{Thread.CurrentThread.ManagedThreadId}");
-        }
-
-        // running out of time
-        void SendClientRequestToTheWorkshop(Client c)
-        {
-            Thread thread = new Thread(() => 
-            {
-                var threadInstance = threadFactory.GetFreeThread();
-                threadInstance.SetWork(FixClientsCar, c, threadInstance.ReleaseTheThread);
-                threadInstance.LaunchThread();
-            });
-            thread.Start();
-        }
-
-        void FixClientsCar(object client)
-        {
-            Client c = (Client)client;
-            Mechanic mechanic = mechanicsFactory.GetEntity();
-            Console.WriteLine($"mechanic {mechanic.entityId} STARTED work for client[{c.clientId}], thread id:{Thread.CurrentThread.ManagedThreadId}");
-            Thread.Sleep(mechanicWorkDuration);
-            Console.WriteLine($"mechanic {mechanic.entityId} finished work for client[{c.clientId}], thread id:{Thread.CurrentThread.ManagedThreadId}");
-            carPickupPoint.AddCarToPickupPoint(c.clientId);
-            mechanic.ReleaseTheEntity();
         }
     }
 }

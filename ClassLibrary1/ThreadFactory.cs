@@ -55,7 +55,6 @@ namespace ClassLibrary1
                 if (Interlocked.CompareExchange(ref a._lockFlag, 1, 0) == 0)
                 {
                     Console.WriteLine($"Thread[{Thread.CurrentThread.ManagedThreadId}] is locking thread [{a.entityId}]");
-                    //Monitor.Enter(a);
                     threadInstance = a;
                     return true;
                 }
@@ -73,7 +72,6 @@ namespace ClassLibrary1
                 {
                     if (Interlocked.CompareExchange(ref a._lockFlag, 1, 0) == 0)
                     {
-                        //Monitor.Enter(a);
                         threadInstance = a;
 
                         Console.WriteLine($"Finished Persistent ThreadInstance aquasition on iteration [{iteration}], received thread [{threadInstance.assignedThread.ManagedThreadId}]");

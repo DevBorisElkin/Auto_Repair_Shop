@@ -23,7 +23,6 @@ namespace ClassLibrary1
             waitingClients = new List<Client>();
         }
 
-
         public void AddCarToPickupPoint(int id)
         {
             Monitor.Enter(locker);
@@ -35,7 +34,6 @@ namespace ClassLibrary1
             if (waitingClient != null)
             {
                 waitingClient.PickCarAfterItsArrival?.Invoke(id);
-                //CarWasIssuedForWaitingClient?.Invoke(waitingClient);
             }
             Monitor.Exit(locker_clients);
         }
