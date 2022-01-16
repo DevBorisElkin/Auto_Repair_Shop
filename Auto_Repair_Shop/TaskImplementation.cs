@@ -23,6 +23,7 @@ namespace Auto_Repair_Shop
 
         AbstractFactory<Seller> sellersFactory;
         AbstractFactory<Mechanic> mechanicsFactory;
+        ThreadFactory threadFactory;
 
         public TaskImplementation()
         {
@@ -41,6 +42,7 @@ namespace Auto_Repair_Shop
             for (int i = 0; i < mechanicsCount; i++)
                 mechanics.Add(new Mechanic(mechanicsFactory, i));
 
+            threadFactory = new ThreadFactory(5, 1);
             
             ThreadPool.SetMaxThreads(maxThreads, maxThreads);
 
@@ -86,12 +88,16 @@ namespace Auto_Repair_Shop
             // here we start a new thread and searching for mechanic for that specific car
             // then he does the work and sends the car to the pickup point
 
-            ThreadPool.QueueUserWorkItem(
-                    new WaitCallback(x =>
-                    {
-                        FixClientsCar(x);
-                    }), c
-                );
+            //ThreadPool.QueueUserWorkItem(
+            //        new WaitCallback(x =>
+            //        {
+            //            FixClientsCar(x);
+            //        }), c
+            //    );
+
+            var threadInstance = threadFactory.GetFreeThread();
+            threadInstance.SetWork(FixClientsCar, c, threadInstance.ReleaseTheThread);
+            threadInstance.LaunchThread();
         }
 
         void FixClientsCar(object client)
