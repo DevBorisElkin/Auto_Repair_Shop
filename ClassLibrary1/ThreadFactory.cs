@@ -82,6 +82,8 @@ namespace ClassLibrary1
                 }
                 iteration++;
 
+                if (iteration > 20000) Console.WriteLine("Can't get free mechanic thread");
+
                 int chosenDelay = Math.Clamp(searchDelay, 1, 1000);
                 Thread.Sleep(chosenDelay);
             }

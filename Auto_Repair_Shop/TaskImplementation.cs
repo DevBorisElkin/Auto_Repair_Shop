@@ -11,12 +11,12 @@ namespace Auto_Repair_Shop
 {
     public class TaskImplementation
     {
-        int amountOfClients = 20;
+        int amountOfClients = 100;
         int maxThreads = 20;
 
         int sellerWorkDuration = 100; //100
-        int clientMovementTimeToPickupPoint = 100; //100
-        int mechanicWorkDuration = 100; //100
+        int clientMovementTimeToPickupPoint = 1; //100
+        int mechanicWorkDuration = 1000; //100
 
         int sellersCount = 4;
         int mechanicsCount = 5;
@@ -104,6 +104,7 @@ namespace Auto_Repair_Shop
         {
             Client c = (Client)client;
             Mechanic mechanic = mechanicsFactory.GetEntity();
+            Console.WriteLine($"mechanic {mechanic.entityId} STARTED work for client[{c.clientId}], thread id:{Thread.CurrentThread.ManagedThreadId}");
             Thread.Sleep(mechanicWorkDuration);
             Console.WriteLine($"mechanic {mechanic.entityId} finished work for client[{c.clientId}], thread id:{Thread.CurrentThread.ManagedThreadId}");
             mechanic.ReleaseTheEntity();

@@ -16,11 +16,6 @@ namespace ClassLibrary1
         private int entityProcessDelay;
         static private int iterationsLimit = 20000;
 
-        protected T GetObject<T>() where T : new()
-        {
-            return new T();
-        }
-
         public AbstractFactory(List<T> entities, int entityProcessDelay)
         {
             this.entityProcessDelay = entityProcessDelay;
