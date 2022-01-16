@@ -11,12 +11,12 @@ namespace Auto_Repair_Shop
 {
     public class TaskImplementation
     {
-        int amountOfClients = 20;
+        int amountOfClients = 1000;
         int maxThreads = 20;
 
-        int sellerWorkDuration = 100; //100
-        int clientMovementTimeToPickupPoint = 1; //100
-        int mechanicWorkDuration = 100; //100
+        int sellerWorkDuration = 0;                 // e.g. order
+        int clientMovementTimeToPickupPoint = 0;    // e.g. client
+        int mechanicWorkDuration = 0;               // e.g. production
 
         int sellersCount = 4;
         int mechanicsCount = 5;
@@ -28,6 +28,10 @@ namespace Auto_Repair_Shop
 
         public TaskImplementation()
         {
+            sellerWorkDuration = chosenScenario.delayOrder;
+            clientMovementTimeToPickupPoint = chosenScenario.delayClient;
+            mechanicWorkDuration = chosenScenario.delayProduction;
+
             Console.WriteLine($"chosen scenario: {chosenScenario}");
             Console.WriteLine($"Processors count: {Environment.ProcessorCount}");
             Console.WriteLine("Press any key to start");
@@ -86,15 +90,12 @@ namespace Auto_Repair_Shop
 
             if (carPickupPoint.CheckAndPickTheCar(c))
                 Console.WriteLine($"client {c.clientId} FINALLY RECEIVED THE CAR, thread id:{Thread.CurrentThread.ManagedThreadId}");
-            else carPickupPoint.CarWasIssuedForWaitingClient += PickTheCarAfterItsArriaval; 
+            else c.PickCarAfterItsArrival += PickTheCarAfterItsArriaval;
         }
 
-        void PickTheCarAfterItsArriaval(Client c)
+        void PickTheCarAfterItsArriaval(int id)
         {
-            if (carPickupPoint.CheckAndPickTheCar(c))
-                Console.WriteLine($"client {c.clientId} FINALLY RECEIVED THE CAR, thread id:{Thread.CurrentThread.ManagedThreadId}");
-            else
-                Console.WriteLine($"client {c.clientId} FOR UNKNOWN REASON COULDN'T GET HIS CAR:{Thread.CurrentThread.ManagedThreadId}");
+            Console.WriteLine($"client {id} FINALLY RECEIVED THE CAR, BUT CAR ARRIVED A BIT LATER, thread id:{Thread.CurrentThread.ManagedThreadId}");
         }
 
         // running out of time
@@ -106,6 +107,7 @@ namespace Auto_Repair_Shop
                 threadInstance.SetWork(FixClientsCar, c, threadInstance.ReleaseTheThread);
                 threadInstance.LaunchThread();
             });
+            thread.Start();
         }
 
         void FixClientsCar(object client)

@@ -10,6 +10,8 @@ namespace ClassLibrary1
     {
         public int clientId;
 
+        public Action<int> PickCarAfterItsArrival;
+
         public Client(int clientId)
         {
             this.clientId = clientId;

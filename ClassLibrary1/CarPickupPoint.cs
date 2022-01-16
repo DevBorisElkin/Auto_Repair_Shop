@@ -13,6 +13,7 @@ namespace ClassLibrary1
         public List<Client> waitingClients;
 
         public object locker = new object();
+        public object locker_clients = new object();
 
         public Action<Client> CarWasIssuedForWaitingClient;
 
@@ -29,9 +30,14 @@ namespace ClassLibrary1
             availableCarsById.Add(id);
             Monitor.Exit(locker);
 
+            Monitor.Enter(locker_clients);
             var waitingClient = waitingClients.Where(a => a.clientId == id).FirstOrDefault();
             if (waitingClient != null)
-                CarWasIssuedForWaitingClient?.Invoke(waitingClient);
+            {
+                waitingClient.PickCarAfterItsArrival?.Invoke(id);
+                //CarWasIssuedForWaitingClient?.Invoke(waitingClient);
+            }
+            Monitor.Exit(locker_clients);
         }
 
         public bool CheckAndPickTheCar(Client c)
@@ -40,11 +46,14 @@ namespace ClassLibrary1
             if (availableCarsById.Contains(c.clientId))
             {
                 availableCarsById.Remove(c.clientId);
+                Monitor.Exit(locker);
                 return true;
             }
             else
             {
+                Monitor.Enter(locker_clients);
                 waitingClients.Add(c);
+                Monitor.Exit(locker_clients);
             }
 
             Monitor.Exit(locker);
