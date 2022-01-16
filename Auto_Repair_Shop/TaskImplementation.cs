@@ -11,12 +11,12 @@ namespace Auto_Repair_Shop
 {
     public class TaskImplementation
     {
-        int amountOfClients = 100;
+        int amountOfClients = 20;
         int maxThreads = 20;
 
         int sellerWorkDuration = 100; //100
         int clientMovementTimeToPickupPoint = 1; //100
-        int mechanicWorkDuration = 1000; //100
+        int mechanicWorkDuration = 100; //100
 
         int sellersCount = 4;
         int mechanicsCount = 5;
@@ -24,6 +24,7 @@ namespace Auto_Repair_Shop
         AbstractFactory<Seller> sellersFactory;
         AbstractFactory<Mechanic> mechanicsFactory;
         ThreadFactory threadFactory;
+        CarPickupPoint carPickupPoint;
 
         public TaskImplementation()
         {
@@ -43,7 +44,8 @@ namespace Auto_Repair_Shop
                 mechanics.Add(new Mechanic(mechanicsFactory, i));
 
             threadFactory = new ThreadFactory(5, 1);
-            
+            carPickupPoint = new CarPickupPoint();
+
             ThreadPool.SetMaxThreads(maxThreads, maxThreads);
 
             for (int i = 1; i <= amountOfClients; i++)
@@ -71,7 +73,7 @@ namespace Auto_Repair_Shop
         void ManageClient_RequestStage(Client c)
         {
             Seller seller = sellersFactory.GetEntity();
-            Thread.Sleep(sellerWorkDuration); // immitation of DoWork();
+            Thread.Sleep(sellerWorkDuration);
             Console.WriteLine($"client {c.clientId} finished work, thread id:{Thread.CurrentThread.ManagedThreadId}, with seller [{seller.entityId}]");
             seller.ReleaseTheEntity();
             SendClientRequestToTheWorkshop(c);
@@ -81,23 +83,29 @@ namespace Auto_Repair_Shop
         {
             Thread.Sleep(clientMovementTimeToPickupPoint);
             Console.WriteLine($"client {c.clientId} moved to pickup point, thread id:{Thread.CurrentThread.ManagedThreadId}");
+
+            if (carPickupPoint.CheckAndPickTheCar(c))
+                Console.WriteLine($"client {c.clientId} FINALLY RECEIVED THE CAR, thread id:{Thread.CurrentThread.ManagedThreadId}");
+            else carPickupPoint.CarWasIssuedForWaitingClient += PickTheCarAfterItsArriaval; 
         }
 
+        void PickTheCarAfterItsArriaval(Client c)
+        {
+            if (carPickupPoint.CheckAndPickTheCar(c))
+                Console.WriteLine($"client {c.clientId} FINALLY RECEIVED THE CAR, thread id:{Thread.CurrentThread.ManagedThreadId}");
+            else
+                Console.WriteLine($"client {c.clientId} FOR UNKNOWN REASON COULDN'T GET HIS CAR:{Thread.CurrentThread.ManagedThreadId}");
+        }
+
+        // running out of time
         void SendClientRequestToTheWorkshop(Client c)
         {
-            // here we start a new thread and searching for mechanic for that specific car
-            // then he does the work and sends the car to the pickup point
-
-            //ThreadPool.QueueUserWorkItem(
-            //        new WaitCallback(x =>
-            //        {
-            //            FixClientsCar(x);
-            //        }), c
-            //    );
-
-            var threadInstance = threadFactory.GetFreeThread();
-            threadInstance.SetWork(FixClientsCar, c, threadInstance.ReleaseTheThread);
-            threadInstance.LaunchThread();
+            Thread thread = new Thread(() => 
+            {
+                var threadInstance = threadFactory.GetFreeThread();
+                threadInstance.SetWork(FixClientsCar, c, threadInstance.ReleaseTheThread);
+                threadInstance.LaunchThread();
+            });
         }
 
         void FixClientsCar(object client)
@@ -107,8 +115,8 @@ namespace Auto_Repair_Shop
             Console.WriteLine($"mechanic {mechanic.entityId} STARTED work for client[{c.clientId}], thread id:{Thread.CurrentThread.ManagedThreadId}");
             Thread.Sleep(mechanicWorkDuration);
             Console.WriteLine($"mechanic {mechanic.entityId} finished work for client[{c.clientId}], thread id:{Thread.CurrentThread.ManagedThreadId}");
+            carPickupPoint.AddCarToPickupPoint(c.clientId);
             mechanic.ReleaseTheEntity();
         }
-
     }
 }
