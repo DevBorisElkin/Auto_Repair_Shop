@@ -56,16 +56,22 @@ namespace Auto_Repair_Shop
         void ManageClient_RequestStage(Client c)
         {
             Seller seller = sellerFactory.GetSeller();
-            Thread.Sleep(sellerWorkDuration);
+            Thread.Sleep(sellerWorkDuration); // immitation of DoWork();
             Console.WriteLine($"client {c.clientId} finished work, thread id:{Thread.CurrentThread.ManagedThreadId}, with seller [{seller.sellerId}]");
             seller.ReleaseTheSeller();
-
+            SendClientRequestToTheWorkshop(c);
         }
 
         void ManageClient_GoToPickupPoint(Client c)
         {
             Thread.Sleep(clientMovementTimeToPickupPoint);
             Console.WriteLine($"client {c.clientId} moved to pickup point, thread id:{Thread.CurrentThread.ManagedThreadId}");
+        }
+
+        void SendClientRequestToTheWorkshop(Client c)
+        {
+            // here we start a new thread and searching for mechanic for that specific car
+            // then he does the work and sends the car to the pickup point
         }
 
     }
