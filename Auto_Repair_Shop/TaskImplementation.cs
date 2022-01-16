@@ -14,8 +14,8 @@ namespace Auto_Repair_Shop
         int amountOfClients = 20;
         int maxThreads = 20;
 
-        int sellerWorkDuration = 500; //100
-        int clientMovementTimeToPickupPoint = 15; //100
+        int sellerWorkDuration = 1000; //100
+        int clientMovementTimeToPickupPoint = 999; //100
         int mechanicWorkDuration = 1000; //100
 
         int sellersCount = 4;

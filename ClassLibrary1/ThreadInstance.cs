@@ -27,6 +27,7 @@ namespace ClassLibrary1
 
         public void ReleaseTheThread()
         {
+            Console.WriteLine($"Thread[{Thread.CurrentThread.ManagedThreadId}] is trying to unlock thread thread [{entityId}]");
             Interlocked.Decrement(ref _lockFlag);
             Monitor.Exit(this);
             threadFactory.ThreadReleased?.Invoke(this);

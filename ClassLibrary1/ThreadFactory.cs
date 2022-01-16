@@ -54,6 +54,7 @@ namespace ClassLibrary1
             {
                 if (Interlocked.CompareExchange(ref a._lockFlag, 1, 0) == 0)
                 {
+                    Console.WriteLine($"Thread[{Thread.CurrentThread.ManagedThreadId}] is locking thread [{a.entityId}]");
                     Monitor.Enter(a);
                     threadInstance = a;
                     return true;
