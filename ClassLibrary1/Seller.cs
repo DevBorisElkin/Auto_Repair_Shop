@@ -7,25 +7,8 @@ using System.Threading.Tasks;
 
 namespace ClassLibrary1
 {
-    public class Seller
+    public class Seller : Entity<Seller>
     {
-        SellerFactory sellerFactory;
-        public int sellerId;
-        public Seller(SellerFactory factory, int sellerId)
-        {
-            sellerFactory = factory;
-            this.sellerId = sellerId;
-        }
-
-        public int _lockFlag = 0;
-
-        public void ReleaseTheSeller()
-        {
-            //int oldLockFlag = _lockFlag;
-            Interlocked.Decrement(ref _lockFlag);
-            Monitor.Exit(this);
-            //Console.WriteLine($"Releasing the seller, old lock flag[{oldLockFlag}], current[{_lockFlag}]");
-            sellerFactory.ClientReleased?.Invoke(this);
-        }
+        public Seller(AbstractFactory<Seller> factory, int entityId) : base(factory, entityId) { }
     }
 }

@@ -14,6 +14,7 @@ namespace ClassLibrary1
 
         public int _lockFlag = 0;
 
+        public Entity() { }
         public Entity(AbstractFactory<T> factory, int entityId)
         {
             this.factory = factory;

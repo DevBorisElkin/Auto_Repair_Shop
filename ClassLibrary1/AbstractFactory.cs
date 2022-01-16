@@ -15,13 +15,16 @@ namespace ClassLibrary1
 
         private int entityProcessDelay;
 
-        public AbstractFactory(int amountOfEntities, int entityProcessDelay)
+        protected T GetObject<T>() where T : new()
+        {
+            return new T();
+        }
+
+        public AbstractFactory(List<T> entities, int entityProcessDelay)
         {
             this.entityProcessDelay = entityProcessDelay;
             autoResetEvent = new AutoResetEvent(true);
-            entities = new List<T>();
-            for (int i = 1; i <= amountOfEntities; i++)
-                entities.Add((T) new Entity<T>(this, i));
+            this.entities = entities;
 
             EntityReleased += GiveThreadEntity;
         }

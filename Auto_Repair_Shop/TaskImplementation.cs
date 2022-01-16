@@ -17,7 +17,9 @@ namespace Auto_Repair_Shop
         int sellerWorkDuration = 10; //100
         int clientMovementTimeToPickupPoint = 15; //100
 
-        SellerFactory sellerFactory;
+        int sellersCount = 4;
+
+        AbstractFactory<Seller> sellerFactory;
 
         public TaskImplementation()
         {
@@ -26,7 +28,10 @@ namespace Auto_Repair_Shop
             Console.WriteLine("Press any key to start");
             Console.ReadKey();
 
-            sellerFactory = new SellerFactory(4, sellerWorkDuration);
+            List<Seller> sellers = new List<Seller>();
+            sellerFactory = new AbstractFactory<Seller>(sellers, sellerWorkDuration);
+            for (int i = 1; i <= sellersCount; i++)
+                sellers.Add(new Seller(sellerFactory, i));
 
             
             ThreadPool.SetMaxThreads(maxThreads, maxThreads);
@@ -55,10 +60,10 @@ namespace Auto_Repair_Shop
 
         void ManageClient_RequestStage(Client c)
         {
-            Seller seller = sellerFactory.GetSeller();
+            Seller seller = (Seller) sellerFactory.GetEntity();
             Thread.Sleep(sellerWorkDuration); // immitation of DoWork();
-            Console.WriteLine($"client {c.clientId} finished work, thread id:{Thread.CurrentThread.ManagedThreadId}, with seller [{seller.sellerId}]");
-            seller.ReleaseTheSeller();
+            Console.WriteLine($"client {c.clientId} finished work, thread id:{Thread.CurrentThread.ManagedThreadId}, with seller [{seller.entityId}]");
+            seller.ReleaseTheEntity();
             SendClientRequestToTheWorkshop(c);
         }
 

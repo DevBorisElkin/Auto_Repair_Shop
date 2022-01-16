@@ -20,8 +20,8 @@ namespace ClassLibrary1
             this.sellerProcessDelay = sellerProcessDelay;
             autoResetEvent = new AutoResetEvent(true);
             sellers = new List<Seller>();
-            for (int i = 1; i <= amountOfSellers; i++)
-                sellers.Add(new Seller(this, i));
+            //for (int i = 1; i <= amountOfSellers; i++)
+            //    sellers.Add(new Seller(this, i));
 
             ClientReleased += GiveThreadASeller;
         }
