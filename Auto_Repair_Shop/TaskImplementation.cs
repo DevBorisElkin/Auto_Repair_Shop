@@ -11,7 +11,7 @@ namespace Auto_Repair_Shop
 {
     public class TaskImplementation
     {
-        int amountOfClients = 100;
+        int amountOfClients = 20;
         int maxThreads = 20;
 
         int sellerWorkDuration = 500; //100
